@@ -34,7 +34,7 @@ const Register = () => {
         title: "Already logged in",
         description: `Redirecting to your ${currentUser.userType} dashboard`,
       });
-      navigate(`/${currentUser.userType}`);
+      navigate(`/${currentUser.userType || 'dashboard'}`); // Provide fallback path
     }
   }, [currentUser, authLoading, navigate]);
 
