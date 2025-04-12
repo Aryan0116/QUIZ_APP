@@ -38,7 +38,7 @@ const StudentNavbar = () => {
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <Link to="/student" className="text-xl font-bold">
-                <span className="text-quiz-primary">Quiz</span>Pro
+                <span className="text-quiz-primary">COAHUB</span>QUIZ
               </Link>
             </div>
 

@@ -68,7 +68,7 @@ const StudentDashboard = () => {
                 <p className="mt-1 text-gray-500">Welcome back, {currentUser?.name}</p>
               </div>
               <Button onClick={() => navigate('/student/results')}>
-                View All Results
+                View Recent Results
               </Button>
             </div>
           </div>

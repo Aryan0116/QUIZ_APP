@@ -470,7 +470,7 @@ const Performance = () => {
                   </CardHeader>
                   <CardContent>
                     {avgScorePerChapter.length > 0 ? (
-                      <ResponsiveContainer width="100%" height={300}>
+                      <ResponsiveContainer width="100%" height={500}>
                         <BarChart data={avgScorePerChapter}>
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="name" />
@@ -678,7 +678,7 @@ const Performance = () => {
                 </CardHeader>
                 <CardContent>
                   {questionAccuracy.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={400}>
+                    <ResponsiveContainer width="100%" height={500}>
                       <BarChart
                         data={questionAccuracy}
                         layout="vertical"

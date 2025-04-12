@@ -89,7 +89,7 @@ const Register = () => {
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold">
-            <span className="text-indigo-600">Quiz</span>Performance<span className="text-emerald-500">Pro</span>
+            <span className="text-indigo-600">COA</span>HUB<span className="text-emerald-500">QUIZ</span>
           </h1>
           <p className="mt-2 text-gray-600">Create your account</p>
         </div>

@@ -11,13 +11,13 @@ const Home = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 px-4">
       <div className="max-w-3xl w-full text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
-          <span className="text-indigo-600 hover-scale inline-block">Quiz</span>
-          <span className="animate-fade-in delay-75">Performance</span>
-          <span className="text-emerald-500 hover-scale inline-block animate-fade-in delay-150">Pro</span>
+          <span className="text-indigo-600 hover-scale inline-block">COA</span>
+          <span className="animate-fade-in delay-75">HUB</span>
+          <span className="text-emerald-500 hover-scale inline-block animate-fade-in delay-150">QUIZ</span>
         </h1>
         
         <p className="text-xl md:text-2xl text-gray-600 mb-8 animate-slide-in">
-          The intelligent platform for creating, managing, and analyzing quizzes
+          The intelligent platform for creating, managing, and analyzing quizzes, Powered by COAHUB
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-in" style={{ animationDelay: "300ms" }}>
@@ -61,12 +61,12 @@ const Home = () => {
         </div>
         
         <div className="text-sm text-gray-500 animate-fade-in" style={{ animationDelay: "700ms" }}>
-          <p>© 2025 QuizPerformancePro. All rights reserved.</p>
-          <p className="mt-2">
+          <p>© 2025 COAHUB. All rights reserved.</p>
+          {/* <p className="mt-2">
             <Link to="/image-upload-demo" className="text-indigo-500 hover:underline hover-scale inline-block">
               Image Upload Demo
             </Link>
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
