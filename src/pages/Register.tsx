@@ -34,7 +34,7 @@ const Register = () => {
         title: "Already logged in",
         description: `Redirecting to your ${currentUser.userType} dashboard`,
       });
-      navigate(`/${currentUser.userType || 'dashboard'}`); // Provide fallback path
+      navigate(`/${currentUser.userType}`);
     }
   }, [currentUser, authLoading, navigate]);
 
@@ -64,12 +64,11 @@ const Register = () => {
       await register(name, email, password, userType);
       
       // The redirect will be handled by the useEffect above
-      console.log('Registration successful, navigation will happen via auth state change')
+      console.log('Registration successful, navigation will happen via auth state change');
       
       toast({
         title: "Registration successful",
         description: `Welcome to QuizPerformancePro! Redirecting to your ${userType} dashboard.`,
-        duration: 2000,
       });
     } catch (err: any) {
       console.error('Registration error in component:', err);
@@ -90,7 +89,7 @@ const Register = () => {
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold">
-            <span className="text-indigo-600">COA</span>HUB<span className="text-emerald-500">QUIZ</span>
+            <span className="text-indigo-600">Quiz</span>Performance<span className="text-emerald-500">Pro</span>
           </h1>
           <p className="mt-2 text-gray-600">Create your account</p>
         </div>

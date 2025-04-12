@@ -26,7 +26,6 @@ const TeacherDashboard = () => {
         toast({
           title: "Quizzes Loaded",
           description: `${userQuizzes.length} quizzes found in your account`,
-          duration: 2000,
         });
       }
     }
@@ -46,7 +45,6 @@ const TeacherDashboard = () => {
     toast({
       title: "Quiz Deleted",
       description: `"${quizToDelete.title}" has been permanently deleted`,
-      duration: 2000,
     });
     
     setQuizToDelete(null);

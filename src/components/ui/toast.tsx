@@ -1,11 +1,10 @@
-// Likely path: @/components/ui/toast.tsx
 
 import * as React from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
 
-import { cn } from "@/lib/utils" // Make sure you have this utility function
+import { cn } from "@/lib/utils"
 
 const ToastProvider = ToastPrimitives.Provider
 
@@ -29,13 +28,12 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: "border bg-background text-foreground", // Removed extra styles handled by animations/base
+        default: "border bg-background text-foreground shadow-md border-l-4 border-l-primary animate-fade-in",
         destructive:
-          "destructive group border-destructive bg-destructive text-destructive-foreground",
-        // You can add your custom variants back if needed:
-        success: "border-green-500 bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-300",
-        info: "border-blue-500 bg-blue-50 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300",
-        warning: "border-yellow-500 bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300",
+          "destructive group border-destructive bg-destructive/10 text-destructive font-medium border-l-4 border-l-destructive shadow-md animate-fade-in",
+        success: "border-l-4 border-l-green-500 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 shadow-md animate-fade-in",
+        info: "border-l-4 border-l-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 shadow-md animate-fade-in",
+        warning: "border-l-4 border-l-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 shadow-md animate-fade-in",
       },
     },
     defaultVariants: {
@@ -52,8 +50,6 @@ const Toast = React.forwardRef<
   return (
     <ToastPrimitives.Root
       ref={ref}
-      // Pass duration, open, onOpenChange etc. from props
-      // Radix handles the timeout and calls onOpenChange based on `duration`
       className={cn(toastVariants({ variant }), className)}
       {...props}
     />
@@ -83,10 +79,9 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
+      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-70 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
       className
     )}
-    // Radix automatically wires this up to close the parent Toast
     toast-close=""
     {...props}
   >

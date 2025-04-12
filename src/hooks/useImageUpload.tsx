@@ -51,7 +51,6 @@ export const useImageUpload = (bucketName: string = 'question-images') => {
       setError(errorMessage);
       console.error("Hook upload error:", errorMessage);
       
-      // Only show toast if we don't already have one with the same error
       toast({
         title: 'Upload failed',
         description: errorMessage,

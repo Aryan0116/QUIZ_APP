@@ -34,7 +34,7 @@ const App = () => (
     <SupabaseAuthProvider>
       <SupabaseQuizDataProvider>
         <TooltipProvider>
-          
+          <Toaster />
           <Sonner />
           <BrowserRouter>
             <Routes>
@@ -110,7 +110,6 @@ const App = () => (
         </TooltipProvider>
       </SupabaseQuizDataProvider>
     </SupabaseAuthProvider>
-    <Toaster />
   </QueryClientProvider>
 );
 

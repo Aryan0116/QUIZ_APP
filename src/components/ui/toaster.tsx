@@ -1,5 +1,5 @@
-// Likely path: @/components/ui/toaster.tsx
 
+import { useToast } from "@/hooks/use-toast"
 import {
   Toast,
   ToastClose,
@@ -7,32 +7,52 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-  ToastAction // Import if you use actions
-} from "@/components/ui/toast" // Adjust path if needed
-import { useToast } from "@/hooks/use-toast" // Adjust path if needed
+} from "@/components/ui/toast"
+import { useEffect } from "react"
 
 export function Toaster() {
-  const { toasts } = useToast()
+  const { toasts, dismiss } = useToast()
+
+  // Measure performance for toast component rendering
+  useEffect(() => {
+    if (toasts.length > 0) {
+      console.log(`Currently displaying ${toasts.length} toast(s)`)
+    }
+  }, [toasts.length])
 
   return (
-    // Provider sets defaults like duration, swipe direction for all toasts
-    <ToastProvider swipeDirection="right" duration={5000}>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        // Props passed down include: open, onOpenChange, variant, duration (if set per-toast)
+    <ToastProvider>
+      {toasts.map(function ({ id, title, description, action, onOpenChange, ...props }) {
         return (
-          <Toast key={id} {...props}>
+          <Toast 
+            key={id} 
+            {...props} 
+            className="transition-all duration-300 ease-in-out group"
+            onOpenChange={(open) => {
+              if (!open) {
+                console.log('Toast closed via onOpenChange');
+                dismiss(id);
+              }
+              onOpenChange?.(open);
+            }}
+          >
             <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
+              {title && <ToastTitle className="animate-fade-in">{title}</ToastTitle>}
               {description && (
-                <ToastDescription>{description}</ToastDescription>
+                <ToastDescription className="animate-fade-in delay-75">{description}</ToastDescription>
               )}
             </div>
-            {action} {/* Render action button if provided */}
-            <ToastClose /> {/* Essential for manual closing */}
+            {action}
+            <ToastClose 
+              onClick={() => {
+                console.log('Toast close button clicked');
+                dismiss(id);
+              }}
+              className="absolute right-2 top-2 opacity-70 transition-opacity hover:opacity-100 focus:opacity-100"
+            />
           </Toast>
         )
       })}
-      {/* Viewport defines where toasts appear */}
       <ToastViewport />
     </ToastProvider>
   )
