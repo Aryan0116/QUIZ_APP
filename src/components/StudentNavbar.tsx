@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Menu, X, BookOpen, BarChart, LogOut } from 'lucide-react';
+import { Menu, X, BookOpen, BarChart, LogOut, ExternalLink } from 'lucide-react';
 
 const StudentNavbar = () => {
   const { currentUser, logout } = useSupabaseAuth();
@@ -18,12 +18,18 @@ const StudentNavbar = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const navItems = [
+    { path: '/student', label: 'Dashboard', icon: <BookOpen className="mr-2 h-4 w-4" /> },
+    // { path: '/student/quizzes', label: 'Quizzes', icon: <BookOpen className="mr-2 h-4 w-4" /> },
+    // { path: '/student/results', label: 'Results', icon: <BarChart className="mr-2 h-4 w-4" /> },
+  ];
+
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
-  const getInitials = (name: string) => {
+  const getInitials = (name) => {
     return name
       .split(' ')
       .map(n => n[0])
@@ -32,69 +38,71 @@ const StudentNavbar = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200">
+    <nav className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex">
+          <div className="flex items-center">
             <div className="flex-shrink-0 flex items-center">
-              <Link to="/student" className="text-xl font-bold">
-                <span className="text-quiz-primary">COAHUB</span>QUIZ
+              <Link to="/student" className="flex items-center">
+                <img 
+                  src="/favicon.png" 
+                  alt="CoaHub Logo" 
+                  className="h-8 w-8 mr-2"
+                />
+                <span className="text-xl font-bold">
+                  <span className="text-white">DECODE CO-A </span>
+                  <span className="text-yellow-300">QUIZEE</span>
+                </span>
               </Link>
             </div>
-
-            {/* Desktop Menu */}
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link
-                to="/student"
-                className={`${
-                  location.pathname === '/student'
-                    ? 'border-quiz-primary text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-              >
-                Dashboard
-              </Link>
-              <Link
-                to="/student/quizzes"
-                className={`${
-                  location.pathname === '/student/quizzes'
-                    ? 'border-quiz-primary text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-              >
-                Quizzes
-              </Link>
-              <Link
-                to="/student/results"
-                className={`${
-                  location.pathname === '/student/results'
-                    ? 'border-quiz-primary text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-              >
-                Results
-              </Link>
+            
+            {/* Desktop menu */}
+            <div className="hidden md:ml-6 md:flex md:space-x-4 lg:space-x-8">
+              {navItems.map(item => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`${
+                    location.pathname === item.path
+                      ? 'border-yellow-300 text-white'
+                      : 'border-transparent text-gray-100 hover:border-gray-300 hover:text-white'
+                  } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition duration-150`}
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
           </div>
+          
+          <div className="flex items-center space-x-2">
+            {/* Advanced UI Button - Desktop */}
+            <a 
+              href="https://www.coahub.in" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hidden md:flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-black font-medium rounded-lg transition duration-150"
+            >
+              DECODE CO-A
+              <ExternalLink className="ml-1 h-4 w-4" />
+            </a>
 
-          <div className="flex items-center">
-            <div className="hidden sm:ml-6 sm:flex sm:items-center">
+            <div className="hidden md:ml-2 md:flex md:items-center">
               {currentUser && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30">
                       <Avatar className="h-8 w-8">
-                        <AvatarFallback className="bg-quiz-primary text-white">
+                        <AvatarFallback className="bg-yellow-500 text-black">
                           {getInitials(currentUser.name)}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
+                  <DropdownMenuContent align="end" className="w-56">
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
                         <p className="font-medium">{currentUser.name}</p>
-                        <p className="w-[200px] truncate text-sm text-gray-500">
+                        <p className="w-full truncate text-sm text-gray-500">
                           {currentUser.email}
                         </p>
                       </div>
@@ -108,83 +116,95 @@ const StudentNavbar = () => {
                 </DropdownMenu>
               )}
             </div>
-
-            {/* Mobile Menu Button */}
-            <div className="flex items-center sm:hidden">
+            
+            {/* Mobile menu button */}
+            <div className="flex items-center md:hidden">
+              {/* Advanced UI Button - Mobile (Smaller) */}
+              <a 
+                href="https://www.coahub.in" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center mr-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-black text-xs font-medium rounded-lg transition duration-150"
+              >
+                DECODE CO-A
+                <ExternalLink className="ml-1 h-3 w-3" />
+              </a>
+              
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-expanded="false"
+                className="text-white hover:bg-white hover:bg-opacity-20"
               >
-                {mobileMenuOpen ? <X className="block h-6 w-6" /> : <Menu className="block h-6 w-6" />}
+                {mobileMenuOpen ? (
+                  <X className="block h-6 w-6" />
+                ) : (
+                  <Menu className="block h-6 w-6" />
+                )}
               </Button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="sm:hidden">
+        <div className="md:hidden bg-gray-900 bg-opacity-95 text-white">
           <div className="pt-2 pb-3 space-y-1">
-            <Link
-              to="/student"
-              className={`${
-                location.pathname === '/student'
-                  ? 'bg-indigo-50 border-quiz-primary text-quiz-primary'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-              } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+            {navItems.map(item => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`${
+                  location.pathname === item.path
+                    ? 'bg-purple-800 border-yellow-300 text-white'
+                    : 'border-transparent text-gray-300 hover:bg-purple-700 hover:border-gray-300 hover:text-white'
+                } block pl-3 pr-4 py-2 border-l-4 text-base font-medium flex items-center transition duration-150`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.icon}
+                {item.label}
+              </Link>
+            ))}
+            
+            {/* Advanced UI Button - Mobile Menu */}
+            <a 
+              href="https://www.coahub.in" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center justify-between pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-yellow-400 hover:bg-purple-700 hover:text-yellow-300 transition duration-150"
               onClick={() => setMobileMenuOpen(false)}
             >
-              <BookOpen className="mr-2 h-4 w-4 inline" />
-              Dashboard
-            </Link>
-            <Link
-              to="/student/quizzes"
-              className={`${
-                location.pathname === '/student/quizzes'
-                  ? 'bg-indigo-50 border-quiz-primary text-quiz-primary'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-              } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <BookOpen className="mr-2 h-4 w-4 inline" />
-              Quizzes
-            </Link>
-            <Link
-              to="/student/results"
-              className={`${
-                location.pathname === '/student/results'
-                  ? 'bg-indigo-50 border-quiz-primary text-quiz-primary'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
-              } block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <BarChart className="mr-2 h-4 w-4 inline" />
-              Results
-            </Link>
+              <span className="flex items-center">
+                <ExternalLink className="mr-2 h-4 w-4" />
+                DECODE CO-A QUIZEE
+              </span>
+              <span className="text-xs bg-yellow-500 text-black px-2 py-1 rounded-full">
+                Visit
+              </span>
+            </a>
           </div>
-          <div className="pt-4 pb-3 border-t border-gray-200">
+          <div className="pt-4 pb-3 border-t border-gray-700">
             {currentUser && (
               <>
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
                     <Avatar className="h-10 w-10">
-                      <AvatarFallback className="bg-quiz-primary text-white">
+                      <AvatarFallback className="bg-yellow-500 text-black">
                         {getInitials(currentUser.name)}
                       </AvatarFallback>
                     </Avatar>
                   </div>
                   <div className="ml-3">
-                    <div className="text-base font-medium text-gray-800">{currentUser.name}</div>
-                    <div className="text-sm font-medium text-gray-500">{currentUser.email}</div>
+                    <div className="text-base font-medium text-white">{currentUser.name}</div>
+                    <div className="text-sm font-medium text-gray-300">{currentUser.email}</div>
                   </div>
                 </div>
                 <div className="mt-3 space-y-1">
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-red-600"
+                    className="w-full justify-start text-red-400 hover:bg-purple-700 hover:text-red-300"
                     onClick={() => {
                       handleLogout();
                       setMobileMenuOpen(false);

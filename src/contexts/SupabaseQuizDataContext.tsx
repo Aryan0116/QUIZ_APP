@@ -119,7 +119,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
       
       setQuestions(formattedQuestions);
     } catch (error) {
-      console.error('Error fetching questions:', error);
+      // console.error('Error fetching questions:', error);
       toast({
         title: 'Error',
         description: 'Failed to load questions',
@@ -156,7 +156,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
       
       setQuizzes(formattedQuizzes);
     } catch (error) {
-      console.error('Error fetching quizzes:', error);
+      // console.error('Error fetching quizzes:', error);
       toast({
         title: 'Error',
         description: 'Failed to load quizzes',
@@ -218,7 +218,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
       
       setStudentResults(formattedResults);
     } catch (error) {
-      console.error('Error fetching student results:', error);
+      // console.error('Error fetching student results:', error);
       toast({
         title: 'Error',
         description: 'Failed to load student results',
@@ -266,7 +266,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
       setQuestions(prev => [...prev, newQuestion]);
       return data.id;
     } catch (error) {
-      console.error('Error adding question:', error);
+      // console.error('Error adding question:', error);
       toast({
         title: 'Error',
         description: 'Failed to add question',
@@ -314,7 +314,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
       setQuestions(prev => [...prev, ...newQuestions]);
       return newQuestions.map(q => q.id);
     } catch (error) {
-      console.error('Error adding bulk questions:', error);
+      // console.error('Error adding bulk questions:', error);
       toast({
         title: 'Error',
         description: 'Failed to add questions in bulk',
@@ -347,7 +347,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
         prev.map(q => q.id === id ? { ...q, ...question } : q)
       );
     } catch (error) {
-      console.error('Error updating question:', error);
+      // console.error('Error updating question:', error);
       toast({
         title: 'Error',
         description: 'Failed to update question',
@@ -374,7 +374,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
         }))
       );
     } catch (error) {
-      console.error('Error deleting question:', error);
+      // console.error('Error deleting question:', error);
       toast({
         title: 'Error',
         description: 'Failed to delete question',
@@ -417,7 +417,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
       setQuizzes(prev => [...prev, newQuiz]);
       return data.id;
     } catch (error) {
-      console.error('Error adding quiz:', error);
+      // console.error('Error adding quiz:', error);
       toast({
         title: 'Error',
         description: 'Failed to add quiz',
@@ -450,7 +450,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
         prev.map(q => q.id === id ? { ...q, ...quiz } : q)
       );
     } catch (error) {
-      console.error('Error updating quiz:', error);
+      // console.error('Error updating quiz:', error);
       toast({
         title: 'Error',
         description: 'Failed to update quiz',
@@ -498,7 +498,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
         description: 'Quiz deleted successfully',
       });
     } catch (error) {
-      console.error('Error deleting quiz:', error);
+      // console.error('Error deleting quiz:', error);
       toast({
         title: 'Error',
         description: 'Failed to delete quiz: ' + (error as any).message,
@@ -520,7 +520,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
         .single();
 
       if (userError) {
-        console.error('Error fetching user data:', userError);
+        // console.error('Error fetching user data:', userError);
       }
 
       const studentName = userData?.name || currentUser.name || 'Unknown Student';
@@ -564,7 +564,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
       setStudentResults(prev => [...prev, newResult]);
       return data.id;
     } catch (error) {
-      console.error('Error adding student result:', error);
+      // console.error('Error adding student result:', error);
       toast({
         title: 'Error',
         description: 'Failed to submit quiz result: ' + (error as any).message,
@@ -581,7 +581,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
       if (result.remarks !== undefined) updates.remarks = result.remarks;
       if (result.feedback !== undefined) updates.feedback = result.feedback;
 
-      console.log('Updating student result with:', { id, updates });
+      // console.log('Updating student result with:', { id, updates });
 
       const { error } = await supabase
         .from('student_results')
@@ -589,7 +589,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
         .eq('id', id);
 
       if (error) {
-        console.error('Supabase error updating student result:', error);
+        // console.error('Supabase error updating student result:', error);
         throw error;
       }
 
@@ -614,7 +614,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
       // Refresh results to ensure we have the latest data
       await fetchStudentResults();
     } catch (error) {
-      console.error('Error updating student result:', error);
+      // console.error('Error updating student result:', error);
       toast({
         title: 'Error',
         description: 'Failed to update result: ' + (error as any).message,
@@ -643,7 +643,7 @@ export const SupabaseQuizDataProvider: React.FC<{ children: React.ReactNode }> =
         
       return data.publicUrl;
     } catch (error) {
-      console.error('Error uploading image:', error);
+      // console.error('Error uploading image:', error);
       toast({
         title: 'Error',
         description: 'Failed to upload image',

@@ -28,7 +28,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.id);
+        // console.log('Auth state changed:', event, session?.user?.id);
         
         if (session && session.user) {
           // Don't fetch profile directly in callback - use setTimeout to avoid deadlocks
@@ -41,7 +41,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 .single();
 
               if (error) {
-                console.error('Error fetching user data:', error);
+                // console.error('Error fetching user data:', error);
                 setCurrentUser(null);
                 setIsLoading(false);
                 return;
@@ -58,7 +58,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 setCurrentUser(null);
               }
             } catch (error) {
-              console.error('Error in auth state change handler:', error);
+              // console.error('Error in auth state change handler:', error);
               setCurrentUser(null);
             } finally {
               setIsLoading(false);
@@ -84,7 +84,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
             .single();
 
           if (error) {
-            console.error('Error fetching user data:', error);
+            // console.error('Error fetching user data:', error);
             setCurrentUser(null);
             setIsLoading(false);
             return;
@@ -102,7 +102,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
           }
         }
       } catch (error) {
-        console.error('Error checking user session:', error);
+        // console.error('Error checking user session:', error);
       } finally {
         setIsLoading(false);
       }
@@ -118,7 +118,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      console.log('Attempting login with:', email);
+      // console.log('Attempting login with:', email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -126,14 +126,14 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
       if (error) throw error;
 
-      console.log('Login successful, user:', data.user?.id);
+      // console.log('Login successful, user:', data.user?.id);
 
       toast({
         title: "Login successful",
         description: "Welcome back!",
       });
     } catch (error: any) {
-      console.error('Login error:', error);
+      // console.error('Login error:', error);
       toast({
         title: "Login failed",
         description: error.message || "An unexpected error occurred",
@@ -148,7 +148,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const register = async (name: string, email: string, password: string, userType: 'teacher' | 'student') => {
     setIsLoading(true);
     try {
-      console.log('Registering new user:', email, userType);
+      // console.log('Registering new user:', email, userType);
       
       // Step 1: Sign up the user with Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -159,7 +159,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
       if (authError) throw authError;
       if (!authData.user) throw new Error('Failed to create user');
 
-      console.log('Auth signup successful, user ID:', authData.user.id);
+      // console.log('Auth signup successful, user ID:', authData.user.id);
 
       // Step 2: Create the user profile in the users table with the explicit ID from auth
       const { error: profileError } = await supabase.from('users').insert({
@@ -170,7 +170,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
       });
 
       if (profileError) {
-        console.error('Profile creation error:', profileError);
+        // console.error('Profile creation error:', profileError);
         
         // Only try to delete auth user if registration fails, but don't block on error
         try {
@@ -178,20 +178,20 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
           // Instead, we'll sign out the user
           await supabase.auth.signOut();
         } catch (cleanupErr) {
-          console.error('Failed to clean up after profile creation failure:', cleanupErr);
+          // console.error('Failed to clean up after profile creation failure:', cleanupErr);
         }
           
         throw new Error(`Failed to create user profile: ${profileError.message}`);
       }
 
-      console.log('User profile created successfully');
+      // console.log('User profile created successfully');
 
       toast({
         title: "Registration successful",
         description: `Welcome, ${name}!`,
       });
     } catch (error: any) {
-      console.error('Registration error:', error);
+      // console.error('Registration error:', error);
       toast({
         title: "Registration failed",
         description: error.message || "An unexpected error occurred",
@@ -215,7 +215,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
         description: "You have been successfully logged out.",
       });
     } catch (error: any) {
-      console.error('Logout error:', error);
+      // console.error('Logout error:', error);
       toast({
         title: "Logout failed",
         description: error.message || "An unexpected error occurred",

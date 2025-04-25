@@ -169,7 +169,7 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Helper function to handle Supabase errors
 export const handleSupabaseError = (error: Error) => {
-  console.error('Supabase error:', error);
+  // console.error('Supabase error:', error);
   return { error: error.message || 'An unexpected error occurred' };
 };
 
@@ -201,7 +201,7 @@ export const uploadImage = async (file: File, bucketName: string = 'question-ima
     const filePath = fileName;
     
     // Log the upload attempt
-    console.log(`Attempting to upload ${fileName} to ${bucketName}`);
+    // console.log(`Attempting to upload ${fileName} to ${bucketName}`);
     
     // Get session to check if user is authenticated
     const { data: { session } } = await supabase.auth.getSession();
@@ -217,20 +217,20 @@ export const uploadImage = async (file: File, bucketName: string = 'question-ima
       });
       
     if (uploadError) {
-      console.error('Upload error details:', uploadError);
+      // console.error('Upload error details:', uploadError);
       throw uploadError;
     }
     
-    console.log('Upload successful, getting public URL');
+    // console.log('Upload successful, getting public URL');
     
     const { data: urlData } = supabase.storage
       .from(bucketName)
       .getPublicUrl(filePath);
       
-    console.log('Public URL:', urlData.publicUrl);
+    // console.log('Public URL:', urlData.publicUrl);
     return urlData.publicUrl;
   } catch (error) {
-    console.error('Error uploading image:', error);
+    // console.error('Error uploading image:', error);
     throw error; // Rethrow the error so we can handle it properly
   }
 };

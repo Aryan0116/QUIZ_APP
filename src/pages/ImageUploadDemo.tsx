@@ -11,7 +11,7 @@ const ImageUploadDemo = () => {
   // Example using the component directly
   const handleImageUploaded = (url: string) => {
     setUploadedUrl(url);
-    console.log('Image uploaded with URL:', url);
+    // console.log('Image uploaded with URL:', url);
   };
   
   // Example using the hook

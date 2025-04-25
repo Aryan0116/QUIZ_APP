@@ -68,9 +68,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     // Upload the file
     setIsUploading(true);
     try {
-      console.log("Starting image upload...");
+      // console.log("Starting image upload...");
       const imageUrl = await uploadImage(file, bucketName);
-      console.log("Upload result:", imageUrl);
+      // console.log("Upload result:", imageUrl);
       
       if (imageUrl) {
         onImageUploaded(imageUrl);
@@ -82,7 +82,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         throw new Error('Failed to get image URL');
       }
     } catch (error) {
-      console.error('Upload error:', error);
+      // console.error('Upload error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       toast({
         title: 'Upload failed',
@@ -158,7 +158,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               alt="Preview"
               className="object-contain w-full h-full"
               onError={(e) => {
-                console.error("Image display error");
+                // console.error("Image display error");
                 (e.target as HTMLImageElement).style.display = 'none';
                 toast({
                   title: 'Error displaying image',

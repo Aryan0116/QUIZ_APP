@@ -61,7 +61,7 @@ const trackPerformance = (operation: string, callback: Function) => {
   const start = performance.now();
   const result = callback();
   const end = performance.now();
-  console.log(`Toast operation '${operation}' took ${end - start}ms`);
+  // console.log(`Toast operation '${operation}' took ${end - start}ms`);
   return result;
 };
 

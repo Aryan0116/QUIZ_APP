@@ -9,11 +9,11 @@ const trackPerformance = async (operationName: string, operation: () => Promise<
   try {
     const result = await operation();
     const endTime = performance.now();
-    console.log(`⏱️ ${operationName} took ${(endTime - startTime).toFixed(2)}ms`);
+    // console.log(`⏱️ ${operationName} took ${(endTime - startTime).toFixed(2)}ms`);
     return result;
   } catch (error) {
     const endTime = performance.now();
-    console.error(`⏱️ ${operationName} failed after ${(endTime - startTime).toFixed(2)}ms`);
+    // console.error(`⏱️ ${operationName} failed after ${(endTime - startTime).toFixed(2)}ms`);
     throw error;
   }
 };
@@ -30,13 +30,13 @@ export const useImageUpload = (bucketName: string = 'question-images') => {
     setError(null);
     
     try {
-      console.log("Hook: Uploading file to", bucketName);
+      // console.log("Hook: Uploading file to", bucketName);
       
       const url = await trackPerformance('uploadImage', async () => {
         return await uploadImage(file, bucketName);
       });
       
-      console.log("Hook: Upload successful, URL:", url);
+      // console.log("Hook: Upload successful, URL:", url);
       setImageUrl(url);
       
       toast({
@@ -49,7 +49,7 @@ export const useImageUpload = (bucketName: string = 'question-images') => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       setError(errorMessage);
-      console.error("Hook upload error:", errorMessage);
+      // console.error("Hook upload error:", errorMessage);
       
       toast({
         title: 'Upload failed',

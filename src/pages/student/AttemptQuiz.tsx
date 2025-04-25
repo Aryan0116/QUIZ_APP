@@ -46,7 +46,7 @@ const AttemptQuiz = () => {
     startTime.current = Date.now();
     return () => {
       const loadTime = Date.now() - startTime.current;
-      console.log(`⏱️ Quiz component total mounted time: ${loadTime}ms`);
+      // console.log(`⏱️ Quiz component total mounted time: ${loadTime}ms`);
     };
   }, []);
   
@@ -92,7 +92,7 @@ const AttemptQuiz = () => {
         setImageLoaded(imageLoadedStates);
         setImageErrors(imageErrorStates);
         
-        console.log(`⏱️ Quiz data loaded in ${performance.now() - loadTime}ms`);
+        // console.log(`⏱️ Quiz data loaded in ${performance.now() - loadTime}ms`);
       }
     }
   }, [quizId, getQuizById, questions]);
@@ -108,7 +108,7 @@ const AttemptQuiz = () => {
         if (nextQuestion && nextQuestion.imageUrl) {
           const img = document.createElement('img');
           img.src = nextQuestion.imageUrl;
-          console.log(`Preloading image for next question: ${nextQuestion.imageUrl}`);
+          // console.log(`Preloading image for next question: ${nextQuestion.imageUrl}`);
         }
       }
     }
@@ -175,7 +175,7 @@ const AttemptQuiz = () => {
   
   // Image handling
   const handleImageLoad = (questionId) => {
-    console.log(`Image for question ${questionId} loaded successfully`);
+    // console.log(`Image for question ${questionId} loaded successfully`);
     setImageLoaded(prev => ({
       ...prev,
       [questionId]: true
@@ -187,7 +187,7 @@ const AttemptQuiz = () => {
   };
   
   const handleImageError = (questionId) => {
-    console.error(`Failed to load image for question ${questionId}`);
+    // console.error(`Failed to load image for question ${questionId}`);
     setImageErrors(prev => ({
       ...prev,
       [questionId]: true
