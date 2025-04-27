@@ -444,16 +444,20 @@ const QuestionBank = () => {
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div>
-                        <Label htmlFor="subject">Subject</Label>
-                        <Input 
-                          type="text" 
-                          id="subject" 
-                          value={subject} 
-                          onChange={(e) => setSubject(e.target.value)} 
-                          placeholder="Enter the subject" 
-                        />
-                      </div>
+                    <div>
+  <Label htmlFor="subject">Subject</Label>
+  <select
+    id="subject"
+    value={subject}
+    onChange={(e) => setSubject(e.target.value)}
+    className="border rounded p-2 w-full" // adjust styling if needed
+  >
+    <option value="">Select a subject</option>
+    <option value="CO">Computer Organization (CO)</option>
+    <option value="CA">Computer Architecture (CA)</option>
+  </select>
+</div>
+
                       <div>
                         <Label htmlFor="chapter">Chapter</Label>
                         <Input 
