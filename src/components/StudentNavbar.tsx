@@ -46,7 +46,7 @@ const StudentNavbar = () => {
               <Link to="/student" className="flex items-center">
                 <img 
                   src="/favicon.png" 
-                  alt="CoaHub Logo" 
+                  alt="DECODE CO-A Logo" 
                   className="h-8 w-8 mr-2"
                 />
                 <span className="text-xl font-bold">
@@ -77,9 +77,7 @@ const StudentNavbar = () => {
           <div className="flex items-center space-x-2">
             {/* Advanced UI Button - Desktop */}
             <a 
-              href="https://www.coahub.in" 
-              target="_blank" 
-              rel="noopener noreferrer"
+              href="https://aryan0116.github.io/DECODE-CO-A/" 
               className="hidden md:flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-black font-medium rounded-lg transition duration-150"
             >
               DECODE CO-A
@@ -121,7 +119,7 @@ const StudentNavbar = () => {
             <div className="flex items-center md:hidden">
               {/* Advanced UI Button - Mobile (Smaller) */}
               <a 
-                href="https://www.coahub.in" 
+                href="https://aryan0116.github.io/DECODE-CO-A/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex items-center mr-2 px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-black text-xs font-medium rounded-lg transition duration-150"
@@ -170,9 +168,7 @@ const StudentNavbar = () => {
             
             {/* Advanced UI Button - Mobile Menu */}
             <a 
-              href="https://www.coahub.in" 
-              target="_blank" 
-              rel="noopener noreferrer"
+              href="https://aryan0116.github.io/DECODE-CO-A/" 
               className="flex items-center justify-between pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-yellow-400 hover:bg-purple-700 hover:text-yellow-300 transition duration-150"
               onClick={() => setMobileMenuOpen(false)}
             >
