@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext';
-import { Heart } from 'lucide-react';
-import { LogOut, User, Menu, Link as LinkIcon, ExternalLink } from "lucide-react";
+import { Heart, LogOut, User, Menu, ExternalLink } from "lucide-react";
 
 const Home = () => {
   const { currentUser, isLoading } = useSupabaseAuth();
   const [heartBeat, setHeartBeat] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Heart animation effect
   useEffect(() => {
@@ -18,29 +18,55 @@ const Home = () => {
     return () => clearInterval(heartInterval);
   }, []);
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Header */}
-      <header className="w-full bg-white shadow-md py-4 px-6 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <img 
-            src="/favicon.png" 
-            alt="COAHUB Logo" 
-            className="w-10 h-10 animate-spin"
-            style={{ animationDuration: '10s' }}
-          />
-          <span className="font-bold text-xl text-indigo-600">DECODE CO-A QUIZEE</span>
-        </div>
-        {/* COAHUB Link with Button styling */}
-        <a 
-            href="https://www.coahub.in" 
-            target="_blank" 
-            rel="noopener noreferrer"
+      <header className="w-full bg-white shadow-md py-4 px-6">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <img 
+              src="/favicon.png" 
+              alt="DECODE CO-A Logo" 
+              className="w-10 h-10 animate-spin"
+              style={{ animationDuration: '10s' }}
+            />
+            <span className="font-bold text-xl text-indigo-600">DECODE CO-A QUIZEE</span>
+          </div>
+          
+          {/* Mobile menu button */}
+          <button 
+            className="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100"
+            onClick={toggleMenu}
+          >
+            <Menu className="h-6 w-6" />
+          </button>
+          
+          {/* Desktop link */}
+          <a 
+            href="https://aryan0116.github.io/DECODE-CO-A/" 
             className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
           >
             <ExternalLink className="h-4 w-4" />
-            COAHUB
+            DECODE CO-A
           </a>
+        </div>
+        
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className="mt-4 md:hidden">
+            <a 
+              href="https://aryan0116.github.io/DECODE-CO-A/" 
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300"
+            >
+              <ExternalLink className="h-4 w-4" />
+              DECODE CO-A
+            </a>
+          </div>
+        )}
       </header>
 
       {/* Main Content */}
@@ -49,7 +75,7 @@ const Home = () => {
           <div className="flex items-center justify-center mb-8">
             <img 
               src="/favicon.png" 
-              alt="COAHUB Logo" 
+              alt="DECODE CO-A Logo" 
               className="w-24 h-24 animate-spin"
               style={{ animationDuration: '3s' }}
             />
@@ -62,7 +88,7 @@ const Home = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-600 mb-8 animate-slide-in">
-            The intelligent platform for creating, managing, and analyzing quizzes, Powered by COAHUB
+            The intelligent platform for creating, managing, and analyzing quizzes, Powered by DECODE CO-A
           </p>
 
           {/* New Community Message with Gradient */}
