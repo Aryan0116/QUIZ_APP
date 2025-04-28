@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext';
@@ -9,9 +8,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Filter, Plus, Trash2, Image as ImageIcon, Search, X } from 'lucide-react';
+import { Filter, Plus, Trash2, Image as ImageIcon, Search, X, ChevronDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 const CreateQuiz = () => {
   const navigate = useNavigate();
@@ -37,11 +43,45 @@ const CreateQuiz = () => {
   const [selectedCOs, setSelectedCOs] = useState<string[]>([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string[]>([]);
   const [showWithImages, setShowWithImages] = useState(false);
+  const [availableChapters, setAvailableChapters] = useState<string[]>([]);
   
   // Extract unique values for filters
   const subjects = [...new Set(questions.map(q => q.subject))].filter(Boolean);
-  const chapters = [...new Set(questions.map(q => q.chapter))].filter(Boolean);
+  
+  // Group chapters by subject
+  const chaptersBySubject = questions.reduce((acc, question) => {
+    if (question.subject && question.chapter) {
+      if (!acc[question.subject]) {
+        acc[question.subject] = new Set();
+      }
+      acc[question.subject].add(question.chapter);
+    }
+    return acc;
+  }, {} as Record<string, Set<string>>);
+  
+  // All chapters and COs for when no subject is selected
+  const allChapters = [...new Set(questions.map(q => q.chapter))].filter(Boolean);
   const cos = [...new Set(questions.map(q => q.co))].filter(Boolean);
+  
+  // Update available chapters when subjects change
+  useEffect(() => {
+    if (selectedSubjects.length === 0) {
+      setAvailableChapters(allChapters);
+    } else {
+      const chapters = new Set<string>();
+      selectedSubjects.forEach(subject => {
+        if (chaptersBySubject[subject]) {
+          chaptersBySubject[subject].forEach(chapter => chapters.add(chapter));
+        }
+      });
+      setAvailableChapters(Array.from(chapters));
+      
+      // Remove selected chapters that are no longer available
+      setSelectedChapters(prev => 
+        prev.filter(chapter => Array.from(chapters).includes(chapter))
+      );
+    }
+  }, [selectedSubjects]);
   
   // Apply filters
   useEffect(() => {
@@ -197,6 +237,14 @@ const CreateQuiz = () => {
     navigate('/teacher');
   };
   
+  // Calculate filter counts for badges
+  const filterCount = 
+    (selectedSubjects.length > 0 ? 1 : 0) +
+    (selectedChapters.length > 0 ? 1 : 0) +
+    (selectedCOs.length > 0 ? 1 : 0) +
+    (selectedDifficulty.length > 0 ? 1 : 0) +
+    (showWithImages ? 1 : 0);
+  
   return (
     <div className="min-h-screen bg-gray-50">
       <TeacherNavbar />
@@ -209,21 +257,12 @@ const CreateQuiz = () => {
               Create a new quiz by selecting questions from your question bank
             </p>
           </div>
-          
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter className="h-4 w-4" />
-            {showFilters ? 'Hide Filters' : 'Show Filters'}
-          </Button>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Quiz Configuration */}
-          <div className="lg:col-span-1">
-            <Card>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left Column: Quiz Details */}
+          <div className="lg:col-span-4">
+            <Card className="mb-6">
               <CardHeader>
                 <CardTitle>Quiz Details</CardTitle>
                 <CardDescription>
@@ -261,199 +300,264 @@ const CreateQuiz = () => {
                     Total marks: {selectedQuestionIds.length} (1 mark per question)
                   </p>
                 </div>
-                
-                {selectedQuestionIds.length > 0 && (
-                  <div className="mt-4 max-h-[300px] overflow-y-auto border rounded-md p-3 space-y-2">
-                    <h4 className="text-sm font-medium">Selected Questions:</h4>
-                    {selectedQuestions.map((q, index) => (
-                      <div key={q.id} className="flex items-start gap-2 py-2 border-b last:border-0">
-                        <span className="text-xs font-medium bg-gray-100 rounded-full h-5 w-5 flex items-center justify-center shrink-0 mt-0.5">
-                          {index + 1}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm line-clamp-2">{q.text}</p>
-                          {q.imageUrl && (
-                            <div className="mt-1 flex items-center">
-                              <ImageIcon className="h-3 w-3 text-gray-500 mr-1" />
-                              <span className="text-xs text-gray-500">Has image</span>
-                            </div>
-                          )}
-                        </div>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="h-6 w-6 p-0 shrink-0"
-                          onClick={() => toggleQuestionSelection(q.id)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </CardContent>
               <CardFooter>
                 <Button 
                   className="w-full bg-purple-600 hover:bg-purple-700"
                   onClick={handleCreateQuiz}
+                  disabled={selectedQuestionIds.length === 0 || !quizData.title}
                 >
                   Create Quiz
                 </Button>
               </CardFooter>
             </Card>
             
-            {/* Filters */}
-            {showFilters && (
-              <Card className="mt-6">
-                <CardHeader>
-                  <CardTitle>Filter Questions</CardTitle>
+            {/* Selected Questions Preview */}
+            {selectedQuestionIds.length > 0 && (
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle>Selected Questions</CardTitle>
+                  <CardDescription>
+                    {selectedQuestionIds.length} questions selected
+                  </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="searchQuery">Search</Label>
-                    <div className="relative">
-                      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-                      <Input
-                        id="searchQuery"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search questions..."
-                        className="pl-9"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Checkbox 
-                      id="show-with-images" 
-                      checked={showWithImages}
-                      onCheckedChange={(checked) => setShowWithImages(!!checked)}
-                    />
-                    <Label 
-                      htmlFor="show-with-images"
-                      className="text-sm cursor-pointer"
-                    >
-                      Show only questions with images
-                    </Label>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label>Difficulty Level</Label>
-                    <div className="space-y-2">
-                      {['easy', 'medium', 'hard'].map(difficulty => (
-                        <div key={difficulty} className="flex items-center space-x-2">
-                          <Checkbox 
-                            id={`difficulty-${difficulty}`} 
-                            checked={selectedDifficulty.includes(difficulty)}
-                            onCheckedChange={(checked) => 
-                              handleDifficultyChange(difficulty, !!checked)
-                            }
-                          />
-                          <Label 
-                            htmlFor={`difficulty-${difficulty}`}
-                            className="text-sm cursor-pointer capitalize"
-                          >
-                            {difficulty}
-                          </Label>
+                <CardContent className="max-h-[500px] overflow-y-auto space-y-2">
+                  {selectedQuestions.map((q, index) => (
+                    <div key={q.id} className="flex items-start gap-2 py-2 border-b last:border-0">
+                      <span className="text-xs font-medium bg-purple-100 text-purple-800 rounded-full h-5 w-5 flex items-center justify-center shrink-0 mt-0.5">
+                        {index + 1}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm line-clamp-2">{q.text}</p>
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {q.subject && (
+                            <Badge variant="outline" className="text-xs px-1 py-0">
+                              {q.subject}
+                            </Badge>
+                          )}
+                          {q.difficultyLevel && (
+                            <Badge 
+                              className={`text-xs px-1 py-0 ${
+                                q.difficultyLevel === 'easy' ? 'bg-green-100 text-green-800 hover:bg-green-100' :
+                                q.difficultyLevel === 'medium' ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100' :
+                                'bg-red-100 text-red-800 hover:bg-red-100'
+                              }`}
+                            >
+                              {q.difficultyLevel}
+                            </Badge>
+                          )}
+                          {q.imageUrl && (
+                            <Badge variant="outline" className="text-xs px-1 py-0 flex items-center gap-1">
+                              <ImageIcon className="h-2 w-2" />
+                              <span>Image</span>
+                            </Badge>
+                          )}
                         </div>
-                      ))}
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-6 w-6 p-0 shrink-0"
+                        onClick={() => toggleQuestionSelection(q.id)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label>Subjects</Label>
-                    <div className="max-h-32 overflow-y-auto space-y-2">
-                      {subjects.map(subject => (
-                        <div key={subject} className="flex items-center space-x-2">
-                          <Checkbox 
-                            id={`subject-${subject}`} 
-                            checked={selectedSubjects.includes(subject)}
-                            onCheckedChange={(checked) => 
-                              handleSubjectChange(subject, !!checked)
-                            }
-                          />
-                          <Label 
-                            htmlFor={`subject-${subject}`}
-                            className="text-sm cursor-pointer"
-                          >
-                            {subject}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label>Chapters</Label>
-                    <div className="max-h-32 overflow-y-auto space-y-2">
-                      {chapters.map(chapter => (
-                        <div key={chapter} className="flex items-center space-x-2">
-                          <Checkbox 
-                            id={`chapter-${chapter}`} 
-                            checked={selectedChapters.includes(chapter)}
-                            onCheckedChange={(checked) => 
-                              handleChapterChange(chapter, !!checked)
-                            }
-                          />
-                          <Label 
-                            htmlFor={`chapter-${chapter}`}
-                            className="text-sm cursor-pointer"
-                          >
-                            {chapter}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label>Course Outcomes</Label>
-                    <div className="max-h-32 overflow-y-auto space-y-2">
-                      {cos.map(co => (
-                        <div key={co} className="flex items-center space-x-2">
-                          <Checkbox 
-                            id={`co-${co}`} 
-                            checked={selectedCOs.includes(co)}
-                            onCheckedChange={(checked) => 
-                              handleCOChange(co, !!checked)
-                            }
-                          />
-                          <Label 
-                            htmlFor={`co-${co}`}
-                            className="text-sm cursor-pointer"
-                          >
-                            {co}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  ))}
                 </CardContent>
-                <CardFooter>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={clearFilters}
-                  >
-                    Clear All Filters
-                  </Button>
-                </CardFooter>
               </Card>
             )}
           </div>
           
-          {/* Question List */}
-          <div className="lg:col-span-2">
+          {/* Right Column: Question Browser */}
+          <div className="lg:col-span-8">
             <Card>
-              <CardHeader>
-                <CardTitle>Available Questions</CardTitle>
-                <CardDescription>
-                  Select questions to include in your quiz
-                </CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <div>
+                  <CardTitle>Question Bank</CardTitle>
+                  <CardDescription>
+                    {filteredQuestions.length} questions available
+                  </CardDescription>
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="flex items-center gap-2"
+                  onClick={() => setShowFilters(!showFilters)}
+                >
+                  <Filter className="h-4 w-4" />
+                  <span>Filters</span>
+                  {filterCount > 0 && (
+                    <Badge className="ml-1 bg-purple-600">{filterCount}</Badge>
+                  )}
+                </Button>
               </CardHeader>
-              <CardContent>
+              
+              {/* Filter Section */}
+              {showFilters && (
+                <div className="px-6 pt-2 pb-4 border-b">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="searchQuery">Search</Label>
+                      <div className="relative">
+                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                        <Input
+                          id="searchQuery"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="Search questions..."
+                          className="pl-9"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Label>Difficulty Level</Label>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {['easy', 'medium', 'hard'].map(difficulty => (
+                          <Badge 
+                            key={difficulty}
+                            variant={selectedDifficulty.includes(difficulty) ? "default" : "outline"}
+                            className={`
+                              cursor-pointer
+                              ${difficulty === 'easy' && selectedDifficulty.includes(difficulty) ? 'bg-green-600' : ''}
+                              ${difficulty === 'medium' && selectedDifficulty.includes(difficulty) ? 'bg-yellow-600' : ''}
+                              ${difficulty === 'hard' && selectedDifficulty.includes(difficulty) ? 'bg-red-600' : ''}
+                            `}
+                            onClick={() => handleDifficultyChange(difficulty, !selectedDifficulty.includes(difficulty))}
+                          >
+                            {difficulty}
+                          </Badge>
+                        ))}
+                        
+                        <Badge 
+                          variant={showWithImages ? "default" : "outline"}
+                          className="cursor-pointer flex items-center gap-1"
+                          onClick={() => setShowWithImages(!showWithImages)}
+                        >
+                          <ImageIcon className="h-3 w-3" />
+                          <span>With Images</span>
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Subjects Filter */}
+                    <div>
+                      <Collapsible defaultOpen>
+                        <CollapsibleTrigger className="flex w-full items-center justify-between py-2">
+                          <h3 className="text-sm font-medium">Subjects</h3>
+                          <ChevronDown className="h-4 w-4" />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="max-h-40 overflow-y-auto pt-2 space-y-1">
+                          {subjects.map(subject => (
+                            <div key={subject} className="flex items-center space-x-2">
+                              <Checkbox 
+                                id={`subject-${subject}`} 
+                                checked={selectedSubjects.includes(subject)}
+                                onCheckedChange={(checked) => 
+                                  handleSubjectChange(subject, !!checked)
+                                }
+                              />
+                              <Label 
+                                htmlFor={`subject-${subject}`}
+                                className="text-sm cursor-pointer"
+                              >
+                                {subject}
+                              </Label>
+                            </div>
+                          ))}
+                        </CollapsibleContent>
+                      </Collapsible>
+                    </div>
+                    
+                    {/* Chapters Filter */}
+                    <div>
+                      <Collapsible defaultOpen>
+                        <CollapsibleTrigger className="flex w-full items-center justify-between py-2">
+                          <h3 className="text-sm font-medium">Chapters</h3>
+                          <ChevronDown className="h-4 w-4" />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="max-h-40 overflow-y-auto pt-2 space-y-1">
+                          {availableChapters.length > 0 ? (
+                            availableChapters.map(chapter => (
+                              <div key={chapter} className="flex items-center space-x-2">
+                                <Checkbox 
+                                  id={`chapter-${chapter}`} 
+                                  checked={selectedChapters.includes(chapter)}
+                                  onCheckedChange={(checked) => 
+                                    handleChapterChange(chapter, !!checked)
+                                  }
+                                />
+                                <Label 
+                                  htmlFor={`chapter-${chapter}`}
+                                  className="text-sm cursor-pointer"
+                                >
+                                  {chapter}
+                                </Label>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-sm text-gray-500 italic">
+                              {selectedSubjects.length > 0 ? 
+                                "No chapters available for selected subjects" : 
+                                "Select a subject to see related chapters"}
+                            </p>
+                          )}
+                        </CollapsibleContent>
+                      </Collapsible>
+                    </div>
+                    
+                    {/* Course Outcomes Filter */}
+                    <div>
+                      <Collapsible defaultOpen>
+                        <CollapsibleTrigger className="flex w-full items-center justify-between py-2">
+                          <h3 className="text-sm font-medium">Course Outcomes</h3>
+                          <ChevronDown className="h-4 w-4" />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="max-h-40 overflow-y-auto pt-2 space-y-1">
+                          {cos.map(co => (
+                            <div key={co} className="flex items-center space-x-2">
+                              <Checkbox 
+                                id={`co-${co}`} 
+                                checked={selectedCOs.includes(co)}
+                                onCheckedChange={(checked) => 
+                                  handleCOChange(co, !!checked)
+                                }
+                              />
+                              <Label 
+                                htmlFor={`co-${co}`}
+                                className="text-sm cursor-pointer"
+                              >
+                                {co}
+                              </Label>
+                            </div>
+                          ))}
+                        </CollapsibleContent>
+                      </Collapsible>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 flex justify-end">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={clearFilters}
+                      className="text-xs"
+                      disabled={filterCount === 0}
+                    >
+                      Clear All Filters
+                    </Button>
+                  </div>
+                </div>
+              )}
+              
+              {/* Questions List */}
+              <CardContent className="pt-4">
                 {filteredQuestions.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {filteredQuestions.map(question => (
                       <div
                         key={question.id}
@@ -461,7 +565,7 @@ const CreateQuiz = () => {
                           selectedQuestionIds.includes(question.id)
                             ? 'border-purple-400 bg-purple-50'
                             : 'border-gray-200 hover:border-gray-300'
-                        }`}
+                        } transition-colors`}
                       >
                         <div className="flex items-start">
                           <Checkbox 
@@ -478,43 +582,45 @@ const CreateQuiz = () => {
                               {question.text}
                             </Label>
                             
-                            {/* Display image if present */}
-                            {question.imageUrl && (
-                              <div className="mt-2 max-w-xs border rounded-md overflow-hidden bg-gray-50">
-                                <img 
-                                  src={question.imageUrl} 
-                                  alt="Question" 
-                                  className="w-full h-auto max-h-[100px] object-contain"
-                                  onError={(e) => (e.target as HTMLImageElement).style.display = 'none'}
-                                />
+                            <div className="flex flex-wrap items-center gap-2 mt-2">
+                              {/* Display image if present */}
+                              {question.imageUrl && (
+                                <div className="max-w-xs border rounded-md overflow-hidden bg-gray-50">
+                                  <img 
+                                    src={question.imageUrl} 
+                                    alt="Question" 
+                                    className="w-full h-auto max-h-20 object-contain"
+                                    onError={(e) => (e.target as HTMLImageElement).style.display = 'none'}
+                                  />
+                                </div>
+                              )}
+                              
+                              <div className="flex flex-wrap gap-1">
+                                {question.subject && (
+                                  <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+                                    {question.subject}
+                                  </Badge>
+                                )}
+                                {question.chapter && (
+                                  <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">
+                                    {question.chapter}
+                                  </Badge>
+                                )}
+                                {question.co && (
+                                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                                    {question.co}
+                                  </Badge>
+                                )}
+                                <Badge 
+                                  className={`
+                                    ${question.difficultyLevel === 'easy' && 'bg-green-100 text-green-800 hover:bg-green-100'}
+                                    ${question.difficultyLevel === 'medium' && 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100'}
+                                    ${question.difficultyLevel === 'hard' && 'bg-red-100 text-red-800 hover:bg-red-100'}
+                                  `}
+                                >
+                                  {question.difficultyLevel}
+                                </Badge>
                               </div>
-                            )}
-                            
-                            <div className="mt-2 flex flex-wrap gap-2">
-                              {question.subject && (
-                                <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
-                                  {question.subject}
-                                </Badge>
-                              )}
-                              {question.chapter && (
-                                <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">
-                                  {question.chapter}
-                                </Badge>
-                              )}
-                              {question.co && (
-                                <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-                                  {question.co}
-                                </Badge>
-                              )}
-                              <Badge 
-                                className={`
-                                  ${question.difficultyLevel === 'easy' && 'bg-green-100 text-green-800 hover:bg-green-100'}
-                                  ${question.difficultyLevel === 'medium' && 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100'}
-                                  ${question.difficultyLevel === 'hard' && 'bg-red-100 text-red-800 hover:bg-red-100'}
-                                `}
-                              >
-                                {question.difficultyLevel}
-                              </Badge>
                             </div>
                           </div>
                         </div>
