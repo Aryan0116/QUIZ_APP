@@ -35,11 +35,11 @@ import { cn } from '@/lib/utils';
 const SUBJECT_CHAPTERS = {
   "Computer Organization": [
     "Basics of Computers and Von Neumann Architecture",
-    "Number Systems, ALU Design, Multiplication and Division Algorithms, IEEE 754 Standard",
+    "Number Systems ALU Design Multiplication and Division Algorithm IEEE 754 Standard",
     "Instruction Formats and Addressing Modes",
-    "Memory Hierarchy: Cache, Virtual Memory, and CPU-Memory Interfacing",
-    "Control Unit Design, Pipelining, and RISC vs CISC Architectures",
-    "I/O Organization: Handshaking, Polling, Interrupts, and DMA"
+    "Memory Hierarchy: Cache Virtual Memory and CPU-Memory Interfacing",
+    "Control Unit Design Pipelining and RISC vs CISC Architectures",
+    "I/O Organization: Handshaking Polling Interrupts and DMA"
   ],
   "Computer Architecture": [
     "Fundamentals of Computer Architecture and Performance Evaluation and Optimization",
