@@ -91,7 +91,7 @@ const Loader: React.FC<LoaderProps> = ({
             <span> CO-A </span>
             <span className="text-emerald-300">QUIZEE</span>
           </h1>
-          <p className="text-indigo-200 mt-2 text-sm">Challenge your coding knowledge</p>
+          <p className="text-indigo-200 mt-2 text-sm">Challenge and Test your knowledge</p>
         </div>
         
         {/* Progress bar */}
