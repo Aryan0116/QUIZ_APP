@@ -22,10 +22,10 @@ This document provides a comprehensive overview of the data flow within the DECO
 ## Level 1 DFD (Main Processes)
 
 ```
-                 +------------+
-                 | User       |
+                 +---------------+
+                 | User          |
                  | Authentication|
-                 +------+-----+
+                 +------+--------+
                         |
            +-----------+-----------+
            |                       |
