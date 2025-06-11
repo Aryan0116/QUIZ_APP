@@ -242,9 +242,9 @@ const TeacherDashboard = () => {
                             </CardContent>
                             <CardFooter className="flex justify-between pt-0">
                               <div className="flex gap-2">
-                                <Link to={`/teacher/edit-quiz/${quiz.id}`} className="flex-1">
+                                {/* <Link to={`/teacher/edit-quiz/${quiz.id}`} className="flex-1">
                                   <Button variant="outline" size="sm">Edit</Button>
-                                </Link>
+                                </Link> */}
                                 <Link to="/teacher/performance" state={{ quizId: quiz.id }} className="flex-1">
                                   <Button variant="outline" size="sm">Results</Button>
                                 </Link>

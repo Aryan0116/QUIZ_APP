@@ -231,11 +231,11 @@ const StudentDashboard = () => {
                       value={filterCategory}
                       onChange={(e) => setFilterCategory(e.target.value)}
                     >
-                      {categories.map(category => (
+                      {/* {categories.map(category => (
                         <option key={category} value={category}>
                           {category === 'all' ? 'All Categories' : category}
                         </option>
-                      ))}
+                      ))} */}
                     </select>
                   </div>
                 </div>
