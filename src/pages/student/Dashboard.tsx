@@ -221,7 +221,7 @@ const StudentDashboard = () => {
                   />
                 </div>
                 
-                <div className="flex space-x-2">
+                {/* <div className="flex space-x-2">
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <Tag className="h-4 w-4 text-gray-400" />
@@ -231,14 +231,14 @@ const StudentDashboard = () => {
                       value={filterCategory}
                       onChange={(e) => setFilterCategory(e.target.value)}
                     >
-                      {/* {categories.map(category => (
+                      {categories.map(category => (
                         <option key={category} value={category}>
                           {category === 'all' ? 'All Categories' : category}
                         </option>
-                      ))} */}
+                      ))}
                     </select>
                   </div>
-                </div>
+                </div> */}
               </div>
               
               {/* Scrollable quiz container */}
