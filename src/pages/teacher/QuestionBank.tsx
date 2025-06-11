@@ -1042,7 +1042,7 @@ const QuestionBank = () => {
                 <CardFooter className="flex justify-end border-t p-3 gap-2">
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="outline" size="sm">Edit</Button>
+                      {/* <Button variant="outline" size="sm">Edit</Button> */}
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
